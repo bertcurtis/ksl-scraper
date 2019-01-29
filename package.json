@@ -1,0 +1,16 @@
+{
+	"name": "ksl-scraper",
+	"version": "1.0.0",
+	"description": "",
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"mongodb": "^3.1.6",
+		"request": "^2.88.0",
+		"shelljs": "^0.8.2"
+	},
+	"engines": {
+		"node": "8.11.3",
+		"npm": "6.4.1"
+	}
+}
