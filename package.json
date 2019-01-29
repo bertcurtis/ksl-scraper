@@ -2,7 +2,7 @@
 	"name": "ksl-scraper",
 	"version": "1.0.0",
 	"scripts": {
-		"start": "node write-car-urls.js"
+		"start": "node write-car-data.js"
 	},
 	"description": "",
 	"author": "",
