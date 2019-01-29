@@ -1,6 +1,9 @@
 {
 	"name": "ksl-scraper",
 	"version": "1.0.0",
+	"scripts": {
+		"start": "node write-car-urls.js"
+	},
 	"description": "",
 	"author": "",
 	"license": "ISC",
