@@ -11,7 +11,7 @@ var options = {};
 // If phantom is in the path use 'phantomjs', otherwise provide the path to the phantom phantomExecutable
 // e.g for windows:
 // var phantomExecutable = 'E:\\Programs\\PhantomJS\\bin\\phantomjs.exe';
-var phantomExecutable = 'phantomjs';
+var phantomExecutable = './phantomjs';
 
 /**
  * This method converts a Uint8Array to its string representation
