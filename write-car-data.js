@@ -4,6 +4,7 @@ var descriptions = [],
 	imgArrs = [],
 	kslUrls = [],
 	cars = [];
+	dbUrls = [];
 
 var parseCarData = function (data) {
 	for (var i = 0; i < data.length; ++i) {
@@ -34,6 +35,7 @@ var urls = function (callback) {
 			var sval = b.split('=');
 			return fval[1] - sval[1];
 		});
+		dbUrls = sorted;
 		callback(sorted);
 	});
 };
@@ -154,20 +156,30 @@ populateArgs(function (args) {
 
 	// Triggered when the process closes
 	child.on("close", function (code) {
-		if (urls.length > kslUrls.length + 3) {
+		if (dbUrls.length > kslUrls.length + 3) {
 			console.log("Something went wrong in the script probably");
 		}
 		else {
-			mongo.removeAllDocumentsInInfoCollection(function (result) {
-			//console.log(result);
-			});
 			kslUrls.forEach(function (url) {
 				createCarObject(url, function (car) {
-					mongo.insertNewObject('cars-info', car, function(result) {
-						cars.push(result);
-					});				
+					cars.push(car);				
 				});
 			});
+			if (cars.length == kslUrls.length) {
+				mongo.removeAllDocumentsInInfoCollection(function (result) {
+					//console.log(result);
+					});
+				cars.forEach(function(car) {
+					mongo.insertNewObject('cars-info', car, function(result) {
+					cars.push(result);
+					});
+				});		
+			}
+			else {
+				console.log("cars array length: " + cars.length)
+				console.log("kslUrls: " + kslUrls)
+				console.log("urls array: " + dbUrls)
+			}
 		}
 		console.log("Process closed with status code: " + code);
 	});

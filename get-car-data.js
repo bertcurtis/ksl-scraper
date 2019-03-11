@@ -15,11 +15,11 @@ var callback = function (urls) {
 		return page.open(url, function (status) {
 			console.log("poop~=~url~=~" + url);
 			if (status !== "success") {
-				if (failureIncrement > 5) {
+				if (failureIncrement > 8) {
 					phantom.exit();
 				} else {
 					++failureIncrement;
-					return setTimeout(8000, callback(urls));
+					return setTimeout(5000, callback(urls));
 				}
 			} else {
 				try {
@@ -128,7 +128,7 @@ var callback = function (urls) {
 
 				if (x < urls.length) {
 					// navigate to the next url and the callback is this function (recursion)
-					return setTimeout(2000, callback(urls));
+					return setTimeout(5000, callback(urls));
 				} else {
 					// exit phantom once the array has been iterated through
 					phantom.exit();
