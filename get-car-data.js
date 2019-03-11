@@ -15,11 +15,11 @@ var callback = function (urls) {
 		return page.open(url, function (status) {
 			console.log("poop~=~url~=~" + url);
 			if (status !== "success") {
-				if (failureIncrement > 2) {
+				if (failureIncrement > 5) {
 					phantom.exit();
 				} else {
 					++failureIncrement;
-					return setTimeout(2500, callback(urls));
+					return setTimeout(8000, callback(urls));
 				}
 			} else {
 				try {
@@ -123,7 +123,7 @@ var callback = function (urls) {
 					console.log(err);
 					--x;
 					++failureIncrement;
-					return setTimeout(2500, callback(urls));
+					return setTimeout(5000, callback(urls));
 				}
 
 				if (x < urls.length) {

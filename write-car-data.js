@@ -73,7 +73,7 @@ populateArgs(function (args) {
 							car.year = parsedInput[1].trim();
 							break;
 						case 'mileage':
-							car.miles = parsedInput[1].trim();
+							car.miles = ci[x + 1].match(/^\d/) ? parsedInput[1].trim() + ',' + ci[x + 1].trim() : parsedInput[1].trim();
 							break;
 						case 'trim':
 							car.trim = parsedInput[1].trim();
@@ -134,9 +134,7 @@ populateArgs(function (args) {
 	function Uint8ArrToString(myUint8Arr) {
 		return String.fromCharCode.apply(null, myUint8Arr);
 	}
-	mongo.removeAllDocumentsInInfoCollection(function (result) {
-		//console.log(result);
-	});
+	
 	var child = spawn(phantomExecutable, args, options);
 
 	// Receive output of the child process
@@ -156,13 +154,21 @@ populateArgs(function (args) {
 
 	// Triggered when the process closes
 	child.on("close", function (code) {
-		kslUrls.forEach(function (url) {
-			createCarObject(url, function (car) {
-				mongo.insertNewObject('cars-info', car, function(result) {
-					cars.push(result);
-				});				
+		if (urls.length > kslUrls.length + 3) {
+			console.log("Something went wrong in the script probably");
+		}
+		else {
+			mongo.removeAllDocumentsInInfoCollection(function (result) {
+			//console.log(result);
 			});
-		});
+			kslUrls.forEach(function (url) {
+				createCarObject(url, function (car) {
+					mongo.insertNewObject('cars-info', car, function(result) {
+						cars.push(result);
+					});				
+				});
+			});
+		}
 		console.log("Process closed with status code: " + code);
 	});
 });
