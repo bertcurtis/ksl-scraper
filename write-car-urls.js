@@ -4,9 +4,9 @@
 
 var spawn = require('child_process').spawn;
 var mongo = require('./mongo.js');
-var args = ["./get-car-urls.js"];
+var args = ['./get-car-urls.js'];
 // In case you want to customize the process, modify the options object
-var options = {};
+var options = ['--debug=yes', '--ignore-ssl-errors=true', '--ssl-protocol=any', '--web-security=true' ];
 
 // If phantom is in the path use 'phantomjs', otherwise provide the path to the phantom phantomExecutable
 // e.g for windows:
@@ -20,19 +20,20 @@ function Uint8ArrToString(myUint8Arr) {
     return String.fromCharCode.apply(null, myUint8Arr);
 };
 console.log("testing");
-mongo.removeAllDocumentsInUrlsCollection(function (result) {
-    //console.log(result);
-});
+/*mongo.removeAllDocumentsInUrlsCollection(function (result) {
+    console.log(result);
+});*/
 var child = spawn(phantomExecutable, args, options);
 
 // Receive output of the child process
 child.stdout.on('data', function (data) {
     var textData = Uint8ArrToString(data);
+    console.log(textData);
     var urls = [];
     if (textData.includes('listing')) {
         urls = textData.split(/\n/);
     }
-    console.log(urls.length);
+    console.log('url length ' + urls.length);
     urls.forEach(function (url) {
         var insertObject = { url: url };
         mongo.insertNewObject('car-urls', insertObject, function (result) {
