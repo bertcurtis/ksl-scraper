@@ -1,56 +1,34 @@
-/**
- * executing-phantom.js
- */
+const { Builder, By } = require("selenium-webdriver");
+const chrome = require("selenium-webdriver/chrome");
+const mongo = require('./mongo.js');
 
-var spawn = require('child_process').spawn;
-var mongo = require('./mongo.js');
-var args = ['./get-car-urls.js'];
-// In case you want to customize the process, modify the options object
-var options = ['--debug=yes', '--ignore-ssl-errors=true', '--ssl-protocol=any', '--web-security=true' ];
-
-// If phantom is in the path use 'phantomjs', otherwise provide the path to the phantom phantomExecutable
-// e.g for windows:
-// var phantomExecutable = 'E:\\Programs\\PhantomJS\\bin\\phantomjs.exe';
-var phantomExecutable = './phantomjs';
-
-/**
- * This method converts a Uint8Array to its string representation
- */
-function Uint8ArrToString(myUint8Arr) {
-    return String.fromCharCode.apply(null, myUint8Arr);
-};
-console.log("testing");
-/*mongo.removeAllDocumentsInUrlsCollection(function (result) {
-    console.log(result);
-});*/
-var child = spawn(phantomExecutable, args, options);
-
-// Receive output of the child process
-child.stdout.on('data', function (data) {
-    var textData = Uint8ArrToString(data);
-    console.log(textData);
-    var urls = [];
-    if (textData.includes('listing')) {
-        urls = textData.split(/\n/);
-    }
-    console.log('url length ' + urls.length);
-    urls.forEach(function (url) {
-        var insertObject = { url: url };
-        mongo.insertNewObject('car-urls', insertObject, function (result) {
-            console.log(url);
-            //console.log(result);
-        });
-    });
-    //console.log(textData);
-});
-
-// Receive error output of the child process
-child.stderr.on('data', function (err) {
-    var textErr = Uint8ArrToString(err);
-    console.log(textErr);
-});
-
-// Triggered when the process closes
-child.on('close', function (code) {
-    console.log('Process closed with status code: ' + code);
-});
+(async function example() {
+	options = new chrome.Options();
+	options.addArguments("headless"); // note: without dashes
+	options.addArguments("disable-gpu");
+	let driver = await new Builder()
+		.forBrowser("chrome")
+		.setChromeOptions(options) // note this
+        .build();   
+	try {
+        await mongo.removeAllDocumentsInUrlsCollection();
+		await driver.get(
+			"http://www.ksl.com/auto/search/index?p=&keyword=memberId%3A2982824&miles=0&page=0"
+		);
+        let elements = await driver.findElements(By.className("photo-block"));
+        var resultCount = 0;
+		for (var i = 0; i < elements.length; i++) {
+			let element = await elements[i].findElement(By.css("a"));
+			let att = await element.getAttribute("href");
+			if (att.includes("listing")) {
+				var insertObject = { url: att };
+				mongo.insertNewObject("car-urls", insertObject, function(result) {
+                    resultCount++;
+					console.log(resultCount);
+				});
+			}
+		}
+	} finally {
+		await driver.quit();
+	}
+})();
