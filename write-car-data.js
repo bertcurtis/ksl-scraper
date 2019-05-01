@@ -130,15 +130,15 @@ const mongo = require('./mongo.js');
 			}
 			console.log("miles: " + carInfoObject.miles);
 
-			var imgUrls = [];
+			var imgs = [];
 			let listElements = await driver.findElements(By.css("li[style^='width']"));
 			for (var y = 0; y < listElements.length; ++y) {
 				let listElement = await listElements[y].findElement(By.tagName('img'));
 				let imgSrc = await listElement.getAttribute('src');
-				imgUrls.push(imgSrc);
+				imgs.push(imgSrc);
 			}
-			carInfoObject.imgUrls = imgUrls;
-			console.log("imgurl length: " + carInfoObject.imgUrls.length);
+			carInfoObject.imgs = imgs;
+			console.log("imgurl length: " + carInfoObject.imgs.length);
 
 			mongo.insertNewObject('cars-info', carInfoObject, function(result) {
 				resultCount++;
