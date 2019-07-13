@@ -138,6 +138,7 @@ const mongo = require('./mongo.js');
 				imgs.push(imgSrc);
 			}
 			carInfoObject.imgs = imgs;
+			carInfoObject.index = i;
 			console.log("imgurl length: " + carInfoObject.imgs.length);
 
 			mongo.insertNewObject('cars-info', carInfoObject, function(result) {
