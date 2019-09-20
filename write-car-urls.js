@@ -4,8 +4,8 @@ const mongo = require('./mongo.js');
 
 (async function example() {
 	options = new chrome.Options();
-	options.addArguments("headless"); // note: without dashes
-	options.addArguments("disable-gpu");
+	options.addArguments("--headless"); // note: without dashes
+	options.addArguments("--disable-gpu");
 	let driver = await new Builder()
 		.forBrowser("chrome")
 		.setChromeOptions(options) // note this
