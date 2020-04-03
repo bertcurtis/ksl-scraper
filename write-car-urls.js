@@ -13,7 +13,7 @@ const mongo = require('./mongo.js');
 	try {
         await mongo.removeAllDocumentsInUrlsCollection();
 		await driver.get(
-			"http://www.ksl.com/auto/search/index?p=&keyword=memberId%3A2982824&miles=0&page=0"
+			"https://cars.ksl.com/search/index?keyword=strickland+auto&perPage=48"
 		);
         let elements = await driver.findElements(By.className("photo-block"));
         var resultCount = 0;
