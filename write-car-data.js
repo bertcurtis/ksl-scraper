@@ -6,6 +6,7 @@ const mongo = require('./mongo.js');
 	options = new chrome.Options();
 	options.addArguments("--headless"); // note: without dashes
 	options.addArguments("--disable-gpu");
+	options.add_argument("--remote-debugging-port=9222");
 	let driver = await new Builder()
 		.forBrowser("chrome")
 		.setChromeOptions(options) // note this
